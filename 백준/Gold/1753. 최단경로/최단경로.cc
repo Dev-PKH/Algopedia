@@ -5,24 +5,24 @@ using namespace std;
 #define Y second
 #define pa pair<int,int>
 
-vector<pa> vec[20005]; // cost, Vertex;
 priority_queue<pa, vector<pa>, greater<pa>> pq;
-int d[20005];
-int v,e, st, inf = 0x3fffffff;
+vector<pa> adj[20002];
+int d[20002];
+int v,e,st,inf=0x3fffffff;
 
-void dijkstra(int idx)
+void dijkstra()
 {
-	pq.push({0,idx});
-	
 	while(!pq.empty())
 	{
 		auto cur = pq.top(); pq.pop();
-		if(d[cur.Y] != cur.X) continue;
-		for(auto c : vec[cur.Y])
+		if(cur.X != d[cur.Y]) continue;
+		for(auto c : adj[cur.Y])
 		{
-			if(d[c.Y] <= d[cur.Y] + c.X) continue;
-			d[c.Y] = d[cur.Y] + c.X;
-			pq.push({d[c.Y], c.Y});
+			if(d[c.Y] > d[cur.Y] + c.X)
+			{
+				d[c.Y] = d[cur.Y] + c.X;
+				pq.push({d[c.Y],c.Y});
+			}
 		}
 	}
 }
@@ -34,18 +34,20 @@ int main() {
 	cin >> v >> e >> st;
 	
 	fill(d, d+v+1, inf);
-	d[st] = 0;
 	
-	while(e--)
+	for(int i=0; i<e; i++)
 	{
-		int a,b,c;
+		int a, b, c;
 		cin >> a >> b >> c;
-		vec[a].push_back({c,b});
+		adj[a].push_back({c,b});
 	}
 	
-	dijkstra(st);
+	d[st] = 0;
+	pq.push({0,st});
 	
-	for(int i=1; i<=v; i++)
+	dijkstra();
+	
+	for(int i=1;i<=v;i++)
 	{
 		if(d[i] == inf) cout << "INF\n";
 		else cout << d[i] << '\n';
