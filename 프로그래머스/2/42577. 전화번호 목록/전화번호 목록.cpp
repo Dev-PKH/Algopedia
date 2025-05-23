@@ -4,20 +4,13 @@ using namespace std;
 
 bool solution(vector<string> pb) {
     bool answer = true;
-    unordered_map<string, int> m;
     
-    for(int i=0; i<pb.size(); i++)
-        m[pb[i]] = 1;
+    sort(pb.begin(), pb.end());
     
-    for(int i=0; i<pb.size(); i++)
-    {
-        string str = "";
-        for(int j=0; j<pb[i].length(); j++)
-        {
-            str += pb[i][j];
-            if(m[str] && str != pb[i]) return false;
-        }
-    }
+    for(int i=0; i<pb.size()-1; i++)
+        if(pb[i].compare(pb[i+1].substr(0, pb[i].length())) == 0)
+            return false;
+
     
     return answer;
 }
