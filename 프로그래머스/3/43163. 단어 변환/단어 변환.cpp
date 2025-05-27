@@ -8,7 +8,7 @@ int result = 0x7fffffff;
 int row = 0; // word 단어 개수
 int col = 0; // word의 길이
 
-void DFS(vector<string>& s, string b, string& t, int idx, int cnt)
+void DFS(const vector<string>& s, string b, string& t, int idx, int cnt)
 {
     if(t == b) 
     {
@@ -20,11 +20,11 @@ void DFS(vector<string>& s, string b, string& t, int idx, int cnt)
     {
         if(vis[i]) continue;
         
-        int temp = 1;
+        int temp = 0;
         for(int j=0; j<col; j++)
-            if(b[j] != s[i][j]) temp--;
+            if(b[j] != s[i][j]) temp++;
         
-        if(temp >= 0)
+        if(temp == 1)
         {
             vis[i] = 1;
             DFS(s, s[i],t,idx+1, cnt+1);
