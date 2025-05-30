@@ -2,27 +2,29 @@
 
 using namespace std;
 
-const string hexa = "0123456789ABCDEF";
+string base = "0123456789ABCDEF";
 
-string hexing(int idx, int n)
+string haxa(int i, int& n)
 {
-    if(idx < n) return string(1,hexa[idx%n]);
-    return hexing(idx/n, n) + hexa[idx%n];
+    if(i<n) return string(1,base[i]);
+    else return haxa(i/n,n) + base[i%n];
 }
 
 string solution(int n, int t, int m, int p) {
     string answer = "";
-    string result = "";
-    
-    for(int i=0; result.length()<t*m; i++)
-        result += hexing(i, n);
     
     int cnt = 0;
-    for(auto c : result)
+    int cur = 0;
+    for(int i=0; i<t*m; i++)
     {
-        cnt++;
-        if(cnt == p && t > 0) {answer += c; t--;}
-        if(cnt == m) cnt = 0;
+        string s = haxa(i,n);
+        for(auto c : s)
+        {
+            cur++;
+            if(cur == p) {answer += c; cnt++; if(cnt == t) break;}
+            if(cur == m) {cur = 0;}
+        }
+        if(cnt == t) break;
     }
     
     return answer;
