@@ -2,38 +2,31 @@
 
 using namespace std;
 
-// 조합을 구하는 문제
-// 0001 : 학번, 0010 : 이름 ... , 1111: 학번,이름,전공,학년
-
-bool checkmini(vector<int> uniquness, int idx)
+bool check(int i, vector<int>& v)
 {
-    for(auto v : uniquness)
-        if((v&idx) == v) return false; // 후보키 중 최소성 체크 ex) 0011 & 0001 == 0001 (최소성 위배-> 이름은 없어도 되므로)
+    for(auto c : v)
+        if((c & i) == c) return false;
     return true;
 }
 
-int solution(vector<vector<string>> relation) {
-    int row = relation.size(); // tuple
-    int col = relation[0].size(); // attribute
-    int cb = 1 << col; // 전체 조합의수 + 2(0000, 10000)
-    vector<int> uq; // uniqueness 목록
+int solution(vector<vector<string>> r) {
+    int row = r.size();
+    int col = r[0].size();
+    int cnt = 1 << col;
+    vector<int> v;
     
-    for(int i=1; i<cb; i++)
+    for(int a=1; a<cnt; a++)
     {
-        unordered_set<string> domain; // 속성값 조합 목록
-        for(int x=0; x<row; x++)
-        {
-            string s = "";
-            for(int y=0; y<col; y++)
-            {
-                if(i & (1 << y)) // 속성값 조합 확인 ex) 0111 & 0001 -> 0001(학번 포함)
-                    s += relation[x][y];
-            }
-            domain.insert(s);
+        set<string> str;
+        for(int i=0; i<row; i++)
+        {  
+            string temp = "";
+            for(int j=0; j<col; j++)
+                if((1<<j) & a) temp += r[i][j];
+            if(temp != "") str.insert(temp);
         }
-        if(domain.size() == row && checkmini(uq, i)) // 조합에 중복이 없는지와 최소성 만족을 확인
-            uq.push_back(i); // 유일성 추가
+        if(str.size() == row && check(a,v)) {v.push_back(a);} 
     }
-    
-    return uq.size();
+
+    return v.size();
 }
