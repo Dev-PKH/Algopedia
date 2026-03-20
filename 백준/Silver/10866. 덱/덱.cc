@@ -1,66 +1,108 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+const int MX = 10005;
+int arr[2*MX+1];
+int head = MX, tail = MX;
+
+void push_front(int x)
+{
+	arr[head--] = x;
+}
+
+void push_back(int x)
+{
+	arr[++tail] = x;
+}
+
+void pop_front()
+{
+	if(head < tail) head++;
+}
+
+void pop_back()
+{
+	if(tail > head) tail--;
+}
+
+bool empty()
+{
+	return head == tail;
+}
+
+int front()
+{
+	if(!empty()) return arr[head+1];
+	else return -1;
+}
+
+int back()
+{
+	if(!empty()) return arr[tail];
+	return -1;
+}
+
+int size()
+{
+	return tail - head;
+}
 
 int main() {
 	ios::sync_with_stdio(0);
 	cin.tie(0);
 	
-	deque<int> dq;
-	
-	int num, value;
 	string s;
+	int n, num;
 	
-	cin >> num;
-	while(num--)
+	cin >> n;
+	
+	while(n--)
 	{
 		cin >> s;
-		if(s.compare("push_back") == 0)
+		if(s == "push_front")
 		{
-			cin >> value;
-			dq.push_back(value);
+			cin >> num;
+			push_front(num);
 		}
-		else if(s.compare("push_front") == 0)
+		else if(s == "push_back")
 		{
-			cin >> value;
-			dq.push_front(value);
+			cin >> num;
+			push_back(num);
 		}
-		else if(s.compare("pop_front") == 0)
+		else if(s == "pop_front")
 		{
-			if(dq.empty()) cout << -1 << '\n';
+			if(empty()) cout << -1 << '\n';
 			else
 			{
-				cout << dq.front() << '\n';
-				dq.pop_front();
+				cout << front() << '\n';
+				pop_front();
 			}
 		}
-		else if(s.compare("pop_back") == 0)
+		else if(s == "pop_back")
 		{
-			if(dq.empty()) cout << -1 << '\n';
+			if(empty()) cout << -1 << '\n';
 			else
 			{
-				cout << dq.back() << '\n';
-				dq.pop_back();
+				cout << back() << '\n';
+				pop_back();
 			}
 		}
-		else if(s.compare("front") == 0)
+		else if(s == "size")
 		{
-			if(dq.empty()) cout << -1 << '\n';
-			else cout << dq.front() << '\n';
+			cout << size() << '\n';
 		}
-		else if(s.compare("back") == 0)
+		else if(s == "empty")
 		{
-			if(dq.empty()) cout << -1 << '\n';
-			else cout << dq.back() << '\n';
+			if(empty()) cout << 1 << '\n';
+			else cout << 0 << '\n';
 		}
-		else if(s.compare("size") == 0)
+		else if(s == "front")
 		{
-			cout << dq.size() << '\n';
+			cout << front() << '\n';
 		}
 		else
 		{
-			if(dq.empty()) cout << 1 << '\n';
-			else cout << 0 << '\n';
+			cout << back() << '\n';
 		}
 	}
 	
