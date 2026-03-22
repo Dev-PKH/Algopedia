@@ -6,37 +6,33 @@ int main() {
 	cin.tie(0);
 	
 	string s;
+	cin >> s;
+	
 	stack<char> st;
+	int cnt = 0;
 	
-	bool left = false; // left '('
-	int result = 0;
+	bool isLeft = false;
 	
-	getline(cin, s);
-	
-	for(auto i : s)
+	for(auto i:s)
 	{
 		if(i == '(') 
 		{
 			st.push(i);
-			left = true;
+			isLeft = true;
 		}
 		else
 		{
-			if(left) // laser
+			st.pop();
+			if(isLeft)
 			{
-				left = false;
-				st.pop();
-				result += st.size();
+				cnt += st.size();
+				isLeft = false;
 			}
-			else // barMax
-			{
-				result++;
-				st.pop();
-			}
+			else cnt++; // 끝 점 마무리
 		}
 	}
 	
-	cout << result;
+	cout << cnt;
 	
 	return 0;
 }
