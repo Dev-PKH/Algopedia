@@ -3,39 +3,50 @@ using namespace std;
 
 #define X first
 #define Y second
-string board[102];
-int dist[102][102];
-int dx[4] = {1, 0, -1, 0};
-int dy[4] = {0, 1, 0, -1};
+
+int board[102][102];
+int dis[102][102];
+int dx[4] = {1,0,-1,0};
+int dy[4] = {0,1,0,-1};
 int n,m;
 
 int main() {
 	ios::sync_with_stdio(0);
 	cin.tie(0);
 	
-	queue<pair<int,int>> Q;
-	
 	cin >> n >> m;
 	
-	for(int i=0; i<n; i++)	cin >> board[i];
-	
-	Q.push({0,0});
-	dist[0][0] = 1;
-	
-	while(!Q.empty())
+	for(int x=0; x<n; x++)
 	{
-		auto cur = Q.front(); Q.pop();
+		string s;
+		cin >> s;
+		
+		for(int y=0; y<s.length(); y++)
+			board[x][y] = s[y] - '0';
+	}
+	
+	queue<pair<int,int>> q;
+	q.push({0,0});
+	dis[0][0] = 1;
+	
+	while(!q.empty())
+	{
+		auto cur = q.front(); q.pop();
+		
 		for(int i=0; i<4; i++)
 		{
-			int nx = dx[i] + cur.X, ny = dy[i] + cur.Y;
-			if(nx <0 || ny <0 || nx >= n || ny >= m) continue;
-			if(board[nx][ny] == '0' || dist[nx][ny] != 0) continue;
-			Q.push({nx,ny});
-			dist[nx][ny] = dist[cur.X][cur.Y] + 1;
+			int nx=cur.X+dx[i], ny=cur.Y+dy[i];
+			
+			if(nx<0 || ny<0 || nx >=n || ny >=m) continue;
+			if(board[nx][ny] == 0) continue;
+			if(dis[nx][ny] != 0 && dis[nx][ny] <= dis[cur.X][cur.Y]+1) continue;
+			dis[nx][ny] = dis[cur.X][cur.Y]+1;
+			q.push({nx,ny});
 		}
 	}
 	
-	cout << dist[n-1][m-1];
+	cout << dis[n-1][m-1];
+	
 	
 	return 0;
 }
