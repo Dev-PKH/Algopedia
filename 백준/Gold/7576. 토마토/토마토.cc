@@ -3,51 +3,68 @@ using namespace std;
 
 #define X first
 #define Y second
+
 int board[1002][1002];
-int dis[1002][1002];
-int n,m;
 int dx[4] = {1,0,-1,0};
 int dy[4] = {0,1,0,-1};
-
+int n, m, day = 0;
 
 int main() {
 	ios::sync_with_stdio(0);
 	cin.tie(0);
 	
-	queue<pair<int,int>> Q;
+	queue<pair<int,int>> q;
+	
 	cin >> m >> n;
-	for(int i=0; i<n; i++){
-		for(int j=0; j<m; j++){
-			cin >> board[i][j];
-			if(board[i][j] == 1) Q.push({i,j});
-			else if(board[i][j] == 0) dis[i][j] = -1;
-		}
-	}
 	
-	while(!Q.empty())
+	for(int x=0; x<n; x++)
 	{
-		pair<int,int> cur = Q.front(); Q.pop();
-		for(int k=0; k<4; k++)
+		for(int y=0; y<m; y++)
 		{
-			int nx = cur.X + dx[k], ny = cur.Y + dy[k];
-			if(nx <0 || ny <0 || nx >= n || ny >=m) continue;
-			if(dis[nx][ny] > -1) continue;
-			Q.push({nx,ny});
-			dis[nx][ny] = dis[cur.X][cur.Y] + 1;
+			cin >> board[x][y];
+			if(board[x][y] == 1)
+			{
+				q.push({x,y});
+			}
 		}
 	}
 	
-	int day =0;
-	for(int i=0; i<n; i++)
+	int size = q.size();
+	
+	while(!q.empty())
 	{
-		for (int j=0; j<m; j++)
+		auto cur = q.front(); q.pop();
+		size--;
+		
+		for(int i=0; i<4; i++)
 		{
-			if(dis[i][j] == -1) {cout << -1; return 0;}
-			else if(dis[i][j] > day) day = dis[i][j];
+			int nx=cur.X+dx[i], ny=cur.Y+dy[i];
+			if(nx<0||ny<0||nx>=n||ny>=m) continue;
+			if(board[nx][ny] != 0) continue;
+			board[nx][ny] = 1;
+			q.push({nx,ny});
+		}
+		
+		if(size <= 0)
+		{
+			day++;
+			if(!q.empty()) size = q.size();
 		}
 	}
 	
-	cout << day;
-
+	for(int x=0; x<n; x++)
+	{
+		for(int y=0; y<m; y++)
+		{
+			if(board[x][y] == 0)
+			{
+				day = 0;
+				break;
+			}
+		}
+	}
+	
+	cout << day-1;
+	
 	return 0;
 }
