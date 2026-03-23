@@ -1,72 +1,38 @@
-#include <iostream>
-#include <queue>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-bool visit[100009] = {false,};
+#define mx 100005
 
-void bfs(int n, int k)
-{
-	queue<pair<int, int>> q;
-	q.push(make_pair(n,0));
-	
-	while(!q.empty())
-	{
-		int x = q.front().first;
-		int cnt = q.front().second;
-		
-		q.pop();
-		if(x == k)
-		{
-			cout << cnt << '\n';
-			break;
-		}
-		
-		if(x+1 >=0 && x+1 <=100000)
-		{
-			if(!visit[x+1])
-			{
-				q.push(make_pair(x+1, cnt +1));
-				visit[x+1] = true;
-			}
-		}
-		
-		if(x-1 >=0 && x-1 <=100000)
-		{
-			if(!visit[x-1])
-			{
-				q.push(make_pair(x-1, cnt +1));
-				visit[x-1] = true;
-			}
-		}
-		
-		if(x*2 >=0 && x*2 <=100000)
-		{
-			if(!visit[x*2])
-			{
-				q.push(make_pair(x*2, cnt +1));
-				visit[x*2] = true;
-			}
-		}
-		
-		if(x+1 >=0 && x+1 <=100000)
-		{
-			if(!visit[x+1])
-			{
-				q.push(make_pair(x+1, cnt +1));
-				visit[x+1] = true;
-			}
-		}
-	}
-}
+int vis[mx];
 
-using namespace std;
+int n, k;
 
 int main() {
-	int n,k;
+	ios::sync_with_stdio(0);
+	cin.tie(0);
+	
+	queue<int> q;
+	fill(vis, vis+mx, -1);
+	
 	cin >> n >> k;
-	visit[n] = true;
-	bfs(n, k);
+  
+	q.push(n);
+	vis[n] = 0;
+	
+	while(vis[k] == -1)
+	{
+		int cur = q.front(); q.pop();
+		for(int i: {cur-1, cur+1, cur*2})
+		{
+			if(i<0 || i > mx) continue;
+			if(vis[i] != -1) continue;
+
+			vis[i] = vis[cur] + 1;
+			q.push(i);
+		}
+	}
+	
+	cout << vis[k];
 	
 	return 0;
 }
