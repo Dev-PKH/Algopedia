@@ -1,73 +1,89 @@
 #include <bits/stdc++.h>
 using namespace std;
- 
+
 #define X first
 #define Y second
-string board[1002];
-int distF[1002][1002];
-int distJ[1002][1002];
-int dx[4] = {1, 0, -1, 0};
-int dy[4] = {0, 1, 0, -1};
-int n,m;
- 
+
+string s[1002];
+int jp[1002][1002];
+int fp[1002][1002];
+int dx[4] = {1,0,-1,0};
+int dy[4] = {0,1,0,-1};
+int r,c;
+
 int main() {
 	ios::sync_with_stdio(0);
 	cin.tie(0);
- 
-	queue<pair<int,int>> QF;
-	queue<pair<int,int>> QJ;
- 
-	cin >> n >> m;
- 
-	for(int i=0; i<n; i++)
+	
+	queue<pair<int,int>> j;
+	queue<pair<int,int>> f;
+	
+	cin >> r >> c;
+	
+	for(int i=0; i<r; i++) 
 	{
-		cin >> board[i];
-		for(int j=0; j<m; j++)
+		fill(jp[i], jp[i]+c, -1);
+		fill(fp[i], fp[i]+c, -1);
+	}
+	
+	for(int x=0; x<r; x++)
+	{
+		cin >> s[x];
+	}
+	
+	for(int x=0; x<r; x++)
+	{
+		for(int y=0; y<c; y++)
 		{
-			if(board[i][j] == 'F')
+			if(s[x][y] == 'J') 
 			{
-				QF.push({i,j});
-				distF[i][j] = 1;
+				j.push({x,y});
+				jp[x][y] = 0;
 			}
-			else if(board[i][j] == 'J')
+			else if(s[x][y] == 'F') 
 			{
-				QJ.push({i,j});
-				distJ[i][j] = 1;
+				f.push({x,y});
+				fp[x][y] = 0;
 			}
 		}
 	}
- 
-	while(!QF.empty())
+
+	while(!f.empty())
 	{
-		auto cur = QF.front(); QF.pop();
+		auto cur = f.front(); f.pop();
+		
 		for(int i=0; i<4; i++)
 		{
-			int nx = dx[i] + cur.X, ny = dy[i] + cur.Y;
-			if(nx <0 || ny <0 || nx >= n || ny >= m) continue;
-			if(board[nx][ny] == '#' ||  distF[nx][ny] != 0) continue;
-			QF.push({nx,ny});
-			distF[nx][ny] = distF[cur.X][cur.Y] + 1;
+			int nx=cur.X+dx[i], ny=cur.Y+dy[i];
+			if(nx<0||ny<0||nx>=r||ny>=c) continue;
+			if(s[nx][ny] == '#' || fp[nx][ny] >= 0) continue;
+			fp[nx][ny] = fp[cur.X][cur.Y]+1;
+			f.push({nx,ny});
 		}
 	}
 	
-	while(!QJ.empty())
+
+	while(!j.empty())
 	{
-		auto cur = QJ.front(); QJ.pop();
+		auto cur = j.front(); j.pop();
+		
 		for(int i=0; i<4; i++)
 		{
-			int nx = dx[i] + cur.X, ny = dy[i] + cur.Y;
-			if(nx <0 || ny <0 || nx >= n || ny >= m)
+			int nx=cur.X+dx[i], ny=cur.Y+dy[i];
+			if(nx<0||ny<0||nx>=r||ny>=c)
 			{
-				cout << distJ[cur.X][cur.Y];
+				cout << jp[cur.X][cur.Y] + 1;
 				return 0;
 			}
-			if(board[nx][ny] == '#' ||  distJ[nx][ny] != 0) continue;
-			if(distF[nx][ny] != 0 && distF[nx][ny] <= distJ[cur.X][cur.Y] + 1) continue;
-			QJ.push({nx,ny});
-			distJ[nx][ny] = distJ[cur.X][cur.Y] + 1;
+			if(s[nx][ny] == '#' || jp[nx][ny] >=0) continue;
+			if(fp[nx][ny] != -1 && fp[nx][ny] <= jp[cur.X][cur.Y] + 1) continue;
+			j.push({nx,ny});
+			jp[nx][ny] = jp[cur.X][cur.Y]+1;
 		}
 	}
 	
+	
 	cout << "IMPOSSIBLE";
+	
 	return 0;
 }
